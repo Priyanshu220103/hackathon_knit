@@ -29,6 +29,16 @@ async def lifespan(app:FastAPI):
 
 #app
 app=function_fastapi_app_read(True,lifespan)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 function_add_router(app,"router")
 
 @app.get("/")

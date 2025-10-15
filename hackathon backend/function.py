@@ -47,3 +47,25 @@ def function_add_router(app,pattern):
    add_root_pattern_files()
    add_pattern_folder_files()
    return None
+
+
+import joblib
+import numpy as np
+def predict_new_project(original_cost, project_count, cumulative_expenditure, model_path="sector_forecast_model.pkl"):
+    """
+    Predicts the Latest Revised Cost (Rs Cr) for a new project.
+    
+    Parameters:
+        original_cost (float): Original cost in Rs Cr
+        project_count (int): Number of projects in that sector/state
+        cumulative_expenditure (float): Cumulative expenditure so far (Rs Cr)
+        model_path (str): Path to saved model
+    
+    Returns:
+        float: Predicted Latest Revised Cost (Rs Cr)
+    """
+    model = joblib.load(model_path)
+    X_new = np.array([[original_cost, project_count, cumulative_expenditure]])
+    pred_log = model.predict(X_new)
+    predicted_cost = np.expm1(pred_log[0])  # reverse log-transform
+    return round(predicted_cost, 2)
